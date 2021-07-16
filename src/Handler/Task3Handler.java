@@ -1,5 +1,6 @@
 package Handler;
 
+import Topics.FuncAlgorithm;
 import Topics.Matrix;
 import Topics.MatrixInGraph;
 import com.sun.istack.internal.NotNull;
@@ -21,7 +22,7 @@ public class Task3Handler extends AbstractHandler {
 		int[][] primitiveMatrix = fromClient();
 		MatrixInGraph graph = new MatrixInGraph(new Matrix(primitiveMatrix));
 		try {
-			var res = Algorithms.Task3Handler(graph);
+			var res = FuncAlgorithm.Task3Handler(graph);
 			if (res != Integer.MIN_VALUE) {
 				toClient(true);
 				toClient(res);

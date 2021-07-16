@@ -39,7 +39,7 @@ public class MatrixInGraph extends AbstractGraph<Index> {
         };
         var matrix1 = new Matrix(primitiveMatrix1);
         var graph1 = new MatrixInGraph(matrix1);
-        var result = Algorithms.Task1Handler(graph1);
+        var result = FuncAlgorithm.Task1Handler(graph1);
         System.out.println("Connected Component found :");
         System.out.println(result);
         //---------------------------
@@ -63,7 +63,7 @@ public class MatrixInGraph extends AbstractGraph<Index> {
         final Index destination = new Index(0, 5);
 
 
-        var res = Algorithms.allShortestsPaths(graph2.getGraphNode(source), graph2.getGraphNode(destination));
+        var res = FuncAlgorithm.allShortestsPaths(graph2.getGraphNode(source), graph2.getGraphNode(destination));
         System.out.println("Client side print ?");
         System.out.println(res);
 
@@ -86,9 +86,9 @@ public class MatrixInGraph extends AbstractGraph<Index> {
                 {1, 0, 0, 1, 1, 1},
         };
         final var Graph3 = new MatrixInGraph(new Matrix(thirdMatrixTest));
-        var res1 = Algorithms.Task3Handler(Graph1);
-        var res2 = Algorithms.Task3Handler(Graph2);
-        var res3 = Algorithms.Task3Handler(Graph3);
+        var res1 = FuncAlgorithm.Task3Handler(Graph1);
+        var res2 = FuncAlgorithm.Task3Handler(Graph2);
+        var res3 = FuncAlgorithm.Task3Handler(Graph3);
 
         System.out.println("Submarine games :");
         System.out.println(res1);

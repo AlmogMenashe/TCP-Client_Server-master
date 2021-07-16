@@ -1,9 +1,6 @@
 package Handler;
 
-import Topics.Index;
-import Topics.Matrix;
-import Topics.MatrixInGraph;
-import Topics.Node;
+import Topics.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ObjectInputStream;
@@ -39,7 +36,7 @@ public class Task2Handler extends AbstractHandler {
 		}
 		toClient(true);
 		System.out.println("Inside the handler");
-		var result = Algorithms.allShortestsPaths(sourceNode, destinationNode);
+		var result = FuncAlgorithm.allShortestsPaths(sourceNode, destinationNode);
 		toClient(result);
 	}
 
