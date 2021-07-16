@@ -39,7 +39,7 @@ public class MatrixInGraph extends AbstractGraph<Index> {
         };
         var matrix1 = new Matrix(primitiveMatrix1);
         var graph1 = new MatrixInGraph(matrix1);
-        var result = Algorithms.connectedComponents(graph1);
+        var result = Algorithms.Task1Handler(graph1);
         System.out.println("Connected Component found :");
         System.out.println(result);
         //---------------------------
@@ -86,9 +86,9 @@ public class MatrixInGraph extends AbstractGraph<Index> {
                 {1, 0, 0, 1, 1, 1},
         };
         final var Graph3 = new MatrixInGraph(new Matrix(thirdMatrixTest));
-        var res1 = Algorithms.SubmarineGame(Graph1);
-        var res2 = Algorithms.SubmarineGame(Graph2);
-        var res3 = Algorithms.SubmarineGame(Graph3);
+        var res1 = Algorithms.Task3Handler(Graph1);
+        var res2 = Algorithms.Task3Handler(Graph2);
+        var res3 = Algorithms.Task3Handler(Graph3);
 
         System.out.println("Submarine games :");
         System.out.println(res1);

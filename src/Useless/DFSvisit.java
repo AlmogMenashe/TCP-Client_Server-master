@@ -1,4 +1,6 @@
-package Topics;
+package Useless;
+
+import Topics.Node;
 
 import java.util.*;
 

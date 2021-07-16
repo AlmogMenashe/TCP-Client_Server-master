@@ -22,7 +22,7 @@ public class Task1Handler extends AbstractHandler {
 		Matrix matrix = new Matrix(primitiveMatrix);
 		AbstractGraph graph = new MatrixInGraph(matrix);
 
-		var connectedComponents = Algorithms.connectedComponents(graph);
+		var connectedComponents = Algorithms.Task1Handler(graph);
 
 		if (connectedComponents != null) {
 			toClient(connectedComponents);

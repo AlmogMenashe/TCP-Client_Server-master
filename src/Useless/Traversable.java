@@ -1,4 +1,7 @@
-package Topics;
+package Useless;
+
+import Topics.Index;
+import Topics.Node;
 
 import java.util.Collection;
 

@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.*;
 
-
 public class TcpServer {
     /*
     Motivation: 2 running programs on remote hosts wish to communicate with each other over a network connection

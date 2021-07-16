@@ -2,9 +2,6 @@ package ClientServer;
 
 import Handler.TaskType;
 import Handler.Request;
-import Topics.Index;
-
-
 
 import java.io.*;
 import java.net.Socket;
@@ -64,14 +61,14 @@ public class Client {
                 {1, 0, 0, 1, 1},
                 {0, 0, 0, 1, 1},
         };
-        toServer.writeObject(matrix);
-        boolean result = (boolean) fromServer.readObject();
-        if (result) {
-            Integer numOfSubmarines = (Integer) fromServer.readObject();
-            System.out.println("Valid game with " + numOfSubmarines + " valid submarines");
-        } else {
-            System.out.println("Submarine game input was not a valid input");
-        }
+//        toServer.writeObject(matrix);
+//        boolean result = (boolean) fromServer.readObject();
+//        if (result) {
+//            Integer numOfSubmarines = (Integer) fromServer.readObject();
+//            System.out.println("Valid game with " + numOfSubmarines + " valid submarines");
+//        } else {
+//            System.out.println("Submarine game input was not a valid input");
+//        }
     };
 
     static Request Task3 = (ObjectInputStream fromServer, ObjectOutputStream toServer) -> {
@@ -82,23 +79,23 @@ public class Client {
                 {1, 1, 1, 1},
                 {1, 1, 0, 1},
         };
-        toServer.writeObject(matrix);
-        toServer.writeObject(new Index(0, 0));
-        toServer.writeObject(new Index(1, 3));
-        var validationResult = (boolean) fromServer.readObject();
-        if (!validationResult) {
-            System.out.println("Input validation has failed...");
-        } else {
-            var result = (List<List<Index>>) fromServer.readObject();
-            if (result != null) {
-                System.out.println("ClientServer.Client side print of shortest paths ");
-                result.forEach((path) -> {
-                    System.out.println(path);
-                });
-            } else {
-                System.out.println("A path between vertices could not be found :(");
-            }
-        }
+//        toServer.writeObject(matrix);
+//        toServer.writeObject(new Index(0, 0));
+//        toServer.writeObject(new Index(1, 3));
+//        var validationResult = (boolean) fromServer.readObject();
+//        if (!validationResult) {
+//            System.out.println("Input validation has failed...");
+//        } else {
+//            var result = (List<List<Index>>) fromServer.readObject();
+//            if (result != null) {
+//                System.out.println("ClientServer.Client side print of shortest paths ");
+//                result.forEach((path) -> {
+//                    System.out.println(path);
+//                });
+//            } else {
+//                System.out.println("A path between vertices could not be found :(");
+//            }
+//        }
     };
 
     static Request Task4 = (ObjectInputStream fromServer, ObjectOutputStream toServer) -> {
@@ -108,10 +105,10 @@ public class Client {
                 {1, 0, 1},
                 {0, 1, 1},
         };
-        toServer.writeObject(matrix);
-        var result = fromServer.readObject();
-        System.out.println("ClientServer.Client side print :");
-        System.out.println(result);
+//        toServer.writeObject(matrix);
+//        var result = fromServer.readObject();
+//        System.out.println("ClientServer.Client side print :");
+//        System.out.println(result);
     };
 
     /*

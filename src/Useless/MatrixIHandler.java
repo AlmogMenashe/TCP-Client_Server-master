@@ -1,5 +1,9 @@
-package Handler;
+package Useless;
+import Handler.IHandler;
 import Topics.*;
+import Useless.DFSvisit;
+import Useless.ThreadLocalDfsVisit;
+import Useless.TraversableMatrix;
 
 import java.io.*;
 import java.util.*;
@@ -100,11 +104,11 @@ public class MatrixIHandler extends IHandler {
 
 /*
                 case "getShortestPath":
-                    traversableMatrix = new Topics.TraversableMatrix(this.matrix);
+                    traversableMatrix = new Useless.TraversableMatrix(this.matrix);
                     Topics.Index source  = (Topics.Index)objectInputStream.readObject();
                     Topics.Index dest = (Topics.Index)objectInputStream.readObject();
-                    Topics.DFSvisit<Topics.Index> bfsVisit = new Topics.DFSvisit<>();
-                    Collection<Collection<Topics.Index>> path = Topics.DFSvisit.travers(traversableMatrix,new Topics.Node(source),new Topics.Node(dest));
+                    Useless.DFSvisit<Topics.Index> bfsVisit = new Useless.DFSvisit<>();
+                    Collection<Collection<Topics.Index>> path = Useless.DFSvisit.travers(traversableMatrix,new Topics.Node(source),new Topics.Node(dest));
 
                     //return to client
                     objectOutputStream.writeObject(path);

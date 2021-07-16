@@ -67,7 +67,7 @@ public class Matrix<privet> implements Serializable {
         }
     }
 
-    static boolean isValidBySize(int[][] matrix, int maxSize) {
+    public static boolean isValidBySize(int[][] matrix, int maxSize) {
         final var hasInvalidRowNumber = matrix.length > maxSize;
         final var hasInvalidRows = Arrays.stream(matrix).filter(row -> row.length > maxSize).toArray().length != 0;
         return !(hasInvalidRowNumber || hasInvalidRows);
