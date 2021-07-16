@@ -1,10 +1,16 @@
+package Handler;
+import Topics.*;
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MatrixIHandler implements IHandler {
+public class MatrixIHandler extends IHandler {
     private Matrix matrix;
     private Index start,end;
+    private boolean doWork = true;
+
+
 
     /*
     to clear data members between clients (if same instance is shared among clients/tasks)
@@ -25,7 +31,6 @@ public class MatrixIHandler implements IHandler {
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(toClient);
         this.resetParams(); // in order to use same handler between tasks/clients
 
-        boolean doWork = true;
         TraversableMatrix traversableMatrix;
         while(doWork){
             /*
@@ -40,7 +45,7 @@ public class MatrixIHandler implements IHandler {
             // client send a verbal command
             switch(objectInputStream.readObject().toString()){
                 case "matrix":{
-                    // client will send a 2d array. handler will create a new Matrix object
+                    // client will send a 2d array. handler will create a new Topics.Matrix object
                     int[][] primitiveMatrix = (int[][])objectInputStream.readObject();
                     System.out.println("Server: Got 2d array from client");
                     this.matrix = new Matrix(primitiveMatrix);
@@ -48,7 +53,7 @@ public class MatrixIHandler implements IHandler {
                     break;
                 }
 
-                case "getAllLinkedPoints":
+                case "Task1":
                     List<HashSet<Index>> linkedPointsLists = new ArrayList<>();
                     traversableMatrix = new TraversableMatrix(this.matrix);
                     //get all active points
@@ -70,21 +75,46 @@ public class MatrixIHandler implements IHandler {
                     //return to client
                     objectOutputStream.writeObject(linkedPointsLists);
                     break;
+
+                case "Task2":
+                    Index source = (Index)objectInputStream.readObject();
+                    Index dest = (Index)objectInputStream.readObject();
+                    if(matrix.getValue(dest)==0 ||matrix.getValue(source)==0)
+                    {
+                        System.out.println("Give me index with value 1!");
+                        break;
+                    }
+                    TraversableMatrix traversableMatrix = new TraversableMatrix(this.matrix);
+                    HashSet<HashSet<Index>> SetConnectComponents = new HashSet<>();
+                    traversableMatrix.startIndex = source;
+                    SetConnectComponents.add((HashSet<Index>) DFSvisit.travers(traversableMatrix));//not localthread
+                    if(SetConnectComponents.contains(dest)){
+
+                    }
+                    System.out.println("Dijkstra returned:"+ SetConnectComponents);
+                    break;
+            }
+
+
+
+
 /*
                 case "getShortestPath":
-                    traversableMatrix = new TraversableMatrix(this.matrix);
-                    Index source  = (Index)objectInputStream.readObject();
-                    Index dest = (Index)objectInputStream.readObject();
-                    BFSvisit<Index> bfsVisit = new BFSvisit<>();
-                    Collection<Collection<Index>> path = bfsVisit.traverse(traversableMatrix,new Node(source),new Node(dest));
+                    traversableMatrix = new Topics.TraversableMatrix(this.matrix);
+                    Topics.Index source  = (Topics.Index)objectInputStream.readObject();
+                    Topics.Index dest = (Topics.Index)objectInputStream.readObject();
+                    Topics.DFSvisit<Topics.Index> bfsVisit = new Topics.DFSvisit<>();
+                    Collection<Collection<Topics.Index>> path = Topics.DFSvisit.travers(traversableMatrix,new Topics.Node(source),new Topics.Node(dest));
 
                     //return to client
                     objectOutputStream.writeObject(path);
                     break;
 */
+
+
 //                case "neighbors":{
-//                    Index findNeighborsIndex = (Index)objectInputStream.readObject();
-//                    List<Index> neighbors = new ArrayList<>();
+//                    Topics.Index findNeighborsIndex = (Topics.Index)objectInputStream.readObject();
+//                    List<Topics.Index> neighbors = new ArrayList<>();
 //                    if(this.matrix!=null){
 //                        neighbors.addAll(this.matrix.getNeighbors(findNeighborsIndex,false));
 //                        // print result in server
@@ -96,8 +126,8 @@ public class MatrixIHandler implements IHandler {
 //                }
 
 //                case "reachables":{
-//                    Index findNeighborsIndex = (Index)objectInputStream.readObject();
-//                    List<Index> reachables = new ArrayList<>();
+//                    Topics.Index findNeighborsIndex = (Topics.Index)objectInputStream.readObject();
+//                    List<Topics.Index> reachables = new ArrayList<>();
 //                    if(this.matrix!=null){
 //                        reachables.addAll(this.matrix.getReachables(findNeighborsIndex));
 //                        // print result in server

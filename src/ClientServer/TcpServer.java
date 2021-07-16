@@ -1,7 +1,13 @@
+package ClientServer;
+
+import Handler.IHandler;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.concurrent.*;
+
 
 public class TcpServer {
     /*
@@ -30,7 +36,7 @@ public class TcpServer {
     operations
     There are 2 kinds of sockets:
     1. Server Socket - listen and accept incoming connection
-    2. Operational Socket (known as a Client Socket) - read from/write to a data stream
+    2. Operational Socket (known as a ClientServer.Client Socket) - read from/write to a data stream
 
     Each socket is associated with a transport protocol (TCP/UDP) and local information (ip and port).
     Port is used to distinguish between different types of data transmitted over the same data-line
@@ -41,8 +47,8 @@ public class TcpServer {
     2. no ip address in cache
     3. figure out what is the ip address of ynet
     4. chrome needs to send a DNS request (A-Record) to figure out ynet's ip address.
-    DNS Request is done in application layer
-    5. DNS Request is done over either UDP/TCP.
+    DNS Handler.Request is done in application layer
+    5. DNS Handler.Request is done over either UDP/TCP.
     6. chrome needs to ask the operating system to open UDP socket
     7. after UDP socket creation bound to DNS protocol number (port), chrome send DNS request
     8. chrome receives ip address associated with ynet.
@@ -67,69 +73,106 @@ public class TcpServer {
     private final int port;
     private volatile boolean stopServer;
     private ThreadPoolExecutor threadPool;
-    private IHandler requestHandler;
+    private volatile boolean requestHandler;
 
     public TcpServer(int port) {
         this.port = port;
         // initialize data members (although they are initialized by default)
         stopServer = false;
         threadPool = null;
-        requestHandler = null;
+        requestHandler = false;
     }
 
-    public void run(IHandler concreteHandler) {
-        this.requestHandler = concreteHandler;
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+        final TcpServer myServer = new TcpServer(8010);
+        if (!myServer.requestHandler) {
+            myServer.run();
+        } else {
+            System.out.println("The server is already running !");
+        }
+    }
 
+    public void run() {
+        this.requestHandler = true;
+        System.out.println("Listening on port " + this.port);
         new Thread(() -> {
-            // lazy loading
-            threadPool = new ThreadPoolExecutor(3, 5, 10,
-                    TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+            threadPool = new ThreadPoolExecutor(3, 5, 10, TimeUnit.SECONDS,
+                    new LinkedBlockingQueue<>());
             try {
-                /*
-                 if no port is specified - one will be automatically allocated by OS
-                 backlog parameter- number of maximum pending requests
-                 ServerSocket constructor - socket creation + bind to a specific port
-                 Server Socket API:
-                 1. create socket
-                 2. bind to a specific port number
-                 3. listen for incoming connections (a client initiates a tcp connection with server)
-                 4. try to accept (if 3-way handshake is successful)
-                 5. return operational socket (2 way pipeline)
-                 */
-                ServerSocket serverSocket = new ServerSocket(port);
-                while (!stopServer) {
-                    Socket serverToSpecificClient = serverSocket.accept(); // 2 operations: listen()+accept()
-                /*
-                 server will handle each client in a separate thread
-                 define every client as a Runnable task to execute
-                 */
-                    Runnable clientHandling = () -> {
+                try (ServerSocket serverSocket = new ServerSocket(this.port)) {
+                    new Thread(() -> {
                         try {
-                            requestHandler.handle(serverToSpecificClient.getInputStream(),
-                                    serverToSpecificClient.getOutputStream());
-                            // visited handling client. now close all streams
-                            serverToSpecificClient.getInputStream().close();
-                            serverToSpecificClient.getOutputStream().close();
-                            serverToSpecificClient.close();
-                        } catch (IOException ioException) {
-                            System.err.println(ioException.getMessage());
-                        } catch (ClassNotFoundException ce) {
-                            System.err.println(ce.getMessage());
+                            acceptRequests(serverSocket);
+                            // done with server communications
+                            serverSocket.close();
+                        } catch (Exception e) {
+                            try {
+                                serverSocket.close();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                            System.out.println("Communication closed");
                         }
-                    };
-                    threadPool.execute(clientHandling);
+                    }).start();
                 }
-                serverSocket.close();
 
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }).start();
     }
+
+
+    private void acceptRequests(ServerSocket serverSocket) throws IOException {
+        while (!stopServer) {
+            Socket request = null;
+            try {
+                request = serverSocket.accept();
+                if (stopServer) {
+                    closeRequestStreams(request);
+                    return;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Server:: Handshake, Done in " + Thread.currentThread().getName());
+            Socket finalRequest = request;
+            handleRequest(finalRequest);
+        }
+    }
+
+    private void handleRequest(Socket finalRequest) {
+        Runnable runnableClientRequest = () -> {
+            System.out.println("Start handling request, Handling in: " + Thread.currentThread().getName());
+            try {
+                IHandler.handle(finalRequest.getInputStream(), finalRequest.getOutputStream());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            closeRequestStreams(finalRequest);
+        };
+        threadPool.execute(runnableClientRequest);
+    }
+
+    private void closeRequestStreams(Socket finalRequest) {
+        try {
+            finalRequest.getInputStream().close();
+            finalRequest.getOutputStream().close();
+            finalRequest.close();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
     public void stop(){
+        System.out.println("Starting server shutdown operation");
         if(!stopServer)
             stopServer = true;
-        if(threadPool!=null) threadPool.shutdown();
+        if(threadPool!=null) {
+            threadPool.shutdown();
+            System.out.println("Succesfully shutdown server!");
+        }
     }
 
 //    public void jvmInfo(){
@@ -138,8 +181,5 @@ public class TcpServer {
 //    }
 
 
-    public static void main(String[] args) {
-        TcpServer myServer = new TcpServer(8010);
-        myServer.run(new MatrixIHandler());
-    }
+
 }

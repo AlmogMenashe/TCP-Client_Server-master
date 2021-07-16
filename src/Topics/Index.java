@@ -1,14 +1,41 @@
+package Topics;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Index implements Serializable {
-    int row, column;
+    int row, column, dist;
 
     // Constructor
     public Index(int oRow, int oColumn){
         this.row = oRow;
         this.column = oColumn;
     }
+
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
+    //for task 2 daniel added this getters and setter of dist
+    public void setdist(int dist){
+        this.dist=dist;
+    }
+    public int getdist(){
+        return this.dist;
+    }
+
 
     @Override
     public String toString(){

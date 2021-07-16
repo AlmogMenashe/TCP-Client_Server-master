@@ -1,3 +1,5 @@
+package Topics;
+
 import java.util.Collection;
 
 /**
@@ -8,4 +10,7 @@ public interface Traversable<T> {
     public int getValue(T index);
     //todo: check about includeDiagonal
     public Collection<Node<T>>  getReachableNodes(Node<T> someNode,boolean includeDiagonal);
+    public Collection<Node<Index>> getNeighborNodes(Node<Index> someNode, boolean includeDiagonal);
+
+    Collection<Node<Index>> getReachableNodes2(Node<Index> someNode);
 }

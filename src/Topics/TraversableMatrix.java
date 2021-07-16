@@ -1,3 +1,5 @@
+package Topics;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -44,6 +46,28 @@ public class TraversableMatrix implements Traversable<Index> {
         }
         return reachableIndex;
     }
+/*
+    @Override
+    public Collection<Topics.Node<Topics.Index>> getNeighborNodes(Topics.Node<Topics.Index> someNode, boolean includeDiagonal) {
+        return this.matrix.getNeighbors(someNode.getData(), includeDiagonal)
+                .stream().map(index -> new Topics.Node<>(index, someNode)).collect(Collectors.toList());
+    }
+
+ */
+
+    @Override
+    public Collection<Node<Index>> getReachableNodes2( Node<Index> someNode) {
+        List<Node<Index>> reachableIndex = new ArrayList<>();
+        for (Index index : this.matrix.getNeighbors2(someNode.getData())) {
+            if (matrix.getValue(index) == 1) {
+                Node<Index> indexNode = new Node<>(index, someNode);
+
+                reachableIndex.add(indexNode);
+            }
+        }
+        return reachableIndex;
+    }
+
 
     @Override
     public String toString() {

@@ -1,3 +1,5 @@
+package Topics;
+
 import java.util.*;
 
 public class DFSvisit<T> {
@@ -22,6 +24,7 @@ While stack is not empty: // there are nodes to handle V
         if the current reachable node is not in visited set && working stack
         push to stack
  */
+
     public Collection<T> traverse(Traversable<T> partOfGraph,boolean includeDiagonal){
         workingStack.push(partOfGraph.getOrigin());
         while(!workingStack.isEmpty()){
@@ -41,6 +44,8 @@ While stack is not empty: // there are nodes to handle V
         }
         return blackList;
     }
+
+
    /*
    [1,0,1,1]
    [1,1,0,1]
